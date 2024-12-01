@@ -1,14 +1,14 @@
+from functools import reduce
+
 def main():
     with open("input", "r") as f:
         data = f.readlines()
 
-    column1 = [int(line.split()[0]) for line in data]
-    column2 = [int(line.split()[-1]) for line in data]
+    column1 = sorted([int(line.split()[0]) for line in data])
+    column2 = sorted([int(line.split()[-1]) for line in data])
 
-    column1 = sorted(column1)
-    column2 = sorted(column2)
-
-    part1 = sum(abs(column1[i] - column2[i]) for i in range(len(column1)))
+    part1 = map(lambda x,y : abs(x - y), column1, column2)
+    part1 = reduce(lambda x,y:  x+y, part1)
 
     from collections import Counter
     counter = Counter(column2)
