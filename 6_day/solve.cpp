@@ -53,16 +53,16 @@ int main() {
     }
 
     int part2 = 0;
-    rows = move(tempRows);
+    rows[permX][permY] = '^';
 
     for (int i = 0; i < m; i++) {
         for (int j = 0; j < n; j++) {
-            if (rows[i][j] != '.') continue;
+            if (rows[i][j] != 'X') continue;
             int x = permX;
             int y = permY;
             dir = 0;
             unordered_set<string> done;
-            rows[i][j] = '#';
+            tempRows[i][j] = '#';
             while (1) {
                 string move = to_string(x) + '#' + to_string(y) + '#' + to_string(dir);
                 if (done.find(move) != done.end()) break;
@@ -70,14 +70,14 @@ int main() {
                 int newX = x + dirs[dir].first;
                 int newY = y + dirs[dir].second;
                 if (newX == -1 || newY == -1 || newX == m || newY == n) break;
-                if (rows[newX][newY] == '#') {
+                if (tempRows[newX][newY] == '#') {
                     dir = (dir+1)%4;
                 } else {
                     x = newX;
                     y = newY;
                 }
             }
-            rows[i][j] = '.';
+            tempRows[i][j] = '.';
             if (x == 0 || y == 0 || x == m-1 || y == n-1) continue;
             part2++;
         }
