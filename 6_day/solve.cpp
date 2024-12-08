@@ -5,6 +5,7 @@
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <string.h>
 
 using namespace std;
 
@@ -35,17 +36,18 @@ int main() {
     }
 
     vector<string> tempRows(rows.begin(), rows.end());
-    pair<int, int> dirs[4] = {{-1,0}, {0,1}, {1,0}, {0,-1}};
+    pair<int, int> dirs[4] = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
     int dir = 0, part1 = 0, m = rows.size(), n = rows[0].size(), permX = x, permY = y;
+    bool dp[m][n][4];
 
-    while (1) {
+    while (true) {
         if (rows[x][y] != 'X') part1++;
         rows[x][y] = 'X';
         int newX = x + dirs[dir].first;
         int newY = y + dirs[dir].second;
-        if (newX == -1 || newY == -1 || newX == m || newY == n) break;
+        if (newX < 0 || newY < 0 || newX >= m || newY >= n) break;
         if (rows[newX][newY] == '#') {
-            dir = (dir+1)%4;
+            dir = (dir + 1) % 4;
         } else {
             x = newX;
             y = newY;
@@ -63,25 +65,26 @@ int main() {
             dir = 0;
             unordered_set<string> done;
             tempRows[i][j] = '#';
-            while (1) {
-                string move = to_string(x) + '#' + to_string(y) + '#' + to_string(dir);
-                if (done.find(move) != done.end()) break;
-                done.insert(move);
+            memset(dp, false, sizeof(dp));
+            int count = 0;
+            while (count < m*n) {
+                count++;
                 int newX = x + dirs[dir].first;
                 int newY = y + dirs[dir].second;
-                if (newX == -1 || newY == -1 || newX == m || newY == n) break;
+                if (newX < 0 || newY < 0 || newX >= m || newY >= n) break;
                 if (tempRows[newX][newY] == '#') {
-                    dir = (dir+1)%4;
+                    dir = (dir + 1) % 4;
                 } else {
                     x = newX;
                     y = newY;
                 }
             }
             tempRows[i][j] = '.';
-            if (x == 0 || y == 0 || x == m-1 || y == n-1) continue;
-            part2++;
+            if (count < m*n) part2++;
         }
     }
+
+    // Output results
     cout << "Part1: " << part1 << endl;
     cout << "Part2: " << part2 << endl;
 
